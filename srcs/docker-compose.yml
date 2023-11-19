@@ -1,6 +1,12 @@
 version: '3'
 
 volumes:
+  frontend_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/eryilmaz/data/frontend
+      o: bind
   postgresql_data:
     driver: local
     driver_opts:
@@ -19,45 +25,41 @@ services:
     ports:
       - 443:443
     volumes:
-      - wordpress_data:/var/www/html
+      - frontend_data:/var/www/html
     restart: always
     networks:
       - network
     depends_on:
       - adminer
-      - wordpress
-
   postgresql:
     container_name: postgresql 
     build: ./requirements/postgresql
     volumes:
-      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql
     networks:
       - network
     restart: always
     env_file:
       - .env
+  
   adminer:
     container_name: adminer
-    build: ./requirements/bonus/adminer
+    build: ./requirements/adminer
     restart: always
-    depends_on:
-      - mariadb
     expose:
      - "9000"
     networks:
       - network
-  redis:
-    container_name: redis
-    build: ./requirements/bonus/redis
-    depends_on:
-      - wordpress
-    ports:
-     - '6379:6379'
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - wordpress_data:/var/www/html
-    networks:
-      - network
+  
+  # redis:
+  #   container_name: redis
+  #   build: ./requirements/redis
+  #   ports:
+  #    - '6379:6379'
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - frontend:/var/www/html
+  #   networks:
+  #     - network

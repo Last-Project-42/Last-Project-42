@@ -1,8 +1,8 @@
 
 all:
 	@rm -rf /home/eryilmaz/data
-	@mkdir -p /home/eryilmaz/data/wordpress
-	@mkdir -p /home/eryilmaz/data/mysql
+	@mkdir -p /home/eryilmaz/data/frontend
+	@mkdir -p /home/eryilmaz/data/postgresql
 	@docker-compose -f srcs/docker-compose.yml up  -d --build
 
 down:
@@ -33,7 +33,5 @@ setup:
 		sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; \
 		sudo chmod +x /usr/local/bin/docker-compose; \
 	fi
-
-.PHONY: install
 
 .PHONY: all down re clean clear setup
